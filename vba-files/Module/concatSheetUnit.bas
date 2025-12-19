@@ -1,4 +1,3 @@
-Attribute VB_Name = "Module11"
 Option Explicit
 
 ' フォルダ選択ダイアログを表示し、選択されたフォルダパスを取得
@@ -64,47 +63,42 @@ End Function
 ' 引数：
 '   wsDest        … マージ先シート
 '   wsSrc         … マージ元シート
-'   outputStartRow … マージ先シートの追記開始行
-'   sourceStartRow … マージ元シートのデータ開始行
+'   destStartRow … マージ先シートの追記開始行
+'   srcStartRow … マージ元シートのデータ開始行
+'   copyColCount … コピー列数
 ' 戻り値：
 '   Long … 追記した行数（データ無しなら 0）
 Public Function concat_sheet_data( _
     ByVal wsDest As Worksheet, _
     ByVal wsSrc As Worksheet, _
-    ByVal outputStartRow As Long, _
-    ByVal sourceStartRow As Long _
+    ByVal destStartRow As Long, _
+    ByVal srcStartRow As Long, _
+    ByVal copyColCount As Long _
 ) As Long
 
     ' コピー元の最大行を取得
     Dim srcMaxRow As Long
     ' コピー元の最大列を取得
     Dim srcMaxCol As Long
-    srcMaxCol = 21 ' U列までコピー
+    srcMaxCol = copyColCount ' 指定された列数までコピー
     ' コピー元のコピー範囲
     Dim rngSrc As Range
     ' コピー先の貼り付け範囲
     Dim rngDest As Range
-    ' 最大行を検索するための基準列
-    Dim baseCol As Long
-    baseCol = 2 ' B列を基準に最大行を検索
 
-
-    ' 下方向で最大行を検索
-    srcMaxRow = wsSrc.Cells(sourceStartRow, baseCol).End(xlDown).Row
+    ' 下方向で最大行を検索（B列基準）
+    srcMaxRow = wsSrc.Cells(srcStartRow, 2).End(xlDown).Row
     ' 最大行がデータ開始行未満, もしくは最終行の場合、データ無しとみなして終了
-    If srcMaxRow < sourceStartRow Or srcMaxRow = wsSrc.Rows.Count Then
+    If srcMaxRow < srcStartRow Or srcMaxRow = wsSrc.Rows.Count Then
         concat_sheet_data = 0
         Exit Function
     End If
 
     ' コピー範囲
-    Set rngSrc = wsSrc.Range(wsSrc.Cells(sourceStartRow, 1), wsSrc.Cells(srcMaxRow, srcMaxCol))
-
-    ' デバッグ
-    MsgBox "コピー元  shape" & rngSrc.Rows.Count & " x " & rngSrc.Columns.Count
+    Set rngSrc = wsSrc.Range(wsSrc.Cells(srcStartRow, 2), wsSrc.Cells(srcMaxRow, srcMaxCol))
 
     ' コピー元へ貼り付け
-    Set rngDest = wsDest.Cells(outputStartRow, 1).Resize(rngSrc.Rows.Count, rngSrc.Columns.Count)
+    Set rngDest = wsDest.Cells(destStartRow, 2).Resize(rngSrc.Rows.Count, rngSrc.Columns.Count)
     rngDest.Value = rngSrc.Value
 
     ' 追加した行数を返す
