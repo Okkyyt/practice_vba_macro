@@ -25,6 +25,7 @@ End Sub
 Public Sub onClick_Exec_Button()
     
     Dim folderPath As String
+    Dim fileList As Collection
     folderPath = Range("D8").Value
     
     ' 入力チェック
@@ -38,23 +39,30 @@ Public Sub onClick_Exec_Button()
         Exit Sub
     End If
 
+    ' マージのためのExcelファイルが格納されたフォルダからファイルを取得
+    Set fileList = get_file_list(folderPath)
+    If fileList Is Nothing Or fileList.Count = 0 Then
+        MsgBox "Excelファイルがありません", vbExclamation
+        Exit Sub
+    End If
+
     ' 画面更新を無効化して処理を実行
     Application.ScreenUpdating = False
     
     On Error GoTo ErrorHandler
     
     ' 構成１－２
-    Sheet2.sheet_1_2 folderPath
+    Sheet2.sheet_1_2 folderPath, fileList
 
     ' 構成１－３
-    Sheet3.sheet_1_3 folderPath
+    Sheet3.sheet_1_3 folderPath, fileList
 
     ' 構成１－４
-    Sheet4.sheet_1_4 folderPath
+    Sheet4.sheet_1_4 folderPath, fileList
 
     ' 構成１－５
-    Sheet5.sheet_1_5 folderPath
-
+    Sheet5.sheet_1_5 folderPath, fileList
+    
     ' 正常終了
     Application.ScreenUpdating = True
     MsgBox "完了しました。", vbInformation

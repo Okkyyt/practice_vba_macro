@@ -6,7 +6,8 @@ Public Function Concat_Sheet( _
     ByVal destStartRow As Long, _
     ByVal srcStartRow As Long, _
     ByVal copyColCount As Long, _
-    ByVal folderPath As String _
+    ByVal folderPath As String, _
+    ByVal fileList As Collection _
 ) As Long
 
 
@@ -18,20 +19,12 @@ Public Function Concat_Sheet( _
     Dim wbSrc As Workbook
     Dim wsSrc As Worksheet
 
-    Dim fileList As Collection
     Dim filePath As Variant
     Dim appended As Long
 
     ' マージ先シート
     Set wbDest = ThisWorkbook
     Set wsDest = wbDest.Worksheets(destSheetName)
-
-    ' マージのためのExcelファイルが格納されたフォルダからファイルを取得
-    Set fileList = get_file_list(folderPath)
-    If fileList Is Nothing Or fileList.Count = 0 Then
-        MsgBox "Excelファイルがありません", vbExclamation
-        Exit Function
-    End If
 
     ' マージ先シートの既存データをクリア：8行目から最終行（通常 1048576）まで
     wsDest.Rows(destStartRow & ":" & wsDest.Rows.Count).Clear

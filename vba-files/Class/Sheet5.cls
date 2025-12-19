@@ -13,7 +13,8 @@ Attribute VB_Exposed = True
 Option Explicit
 
 Public Sub sheet_1_5( _
-  ByVal folderPath As String _
+  ByVal folderPath As String, _
+  ByVal fileList As Collection _
 )
     
     Dim destSheetName As String
@@ -37,7 +38,8 @@ Public Sub sheet_1_5( _
         destStartRow, _
         srcStartRow, _
         copyColCount, _
-        folderPath _
+        folderPath, _
+        fileList _
     )
 End Sub
 
