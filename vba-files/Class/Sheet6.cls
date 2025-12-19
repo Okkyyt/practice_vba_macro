@@ -46,6 +46,9 @@ Public Sub onClick_Exec_Button()
         Exit Sub
     End If
 
+    ' 処理開始を表示
+    Application.StatusBar = "処理中... しばらくお待ちください"
+
     ' 画面更新を無効化して処理を実行
     Application.ScreenUpdating = False
     
@@ -62,6 +65,9 @@ Public Sub onClick_Exec_Button()
 
     ' 構成１－５
     Sheet5.sheet_1_5 folderPath, fileList
+
+    ' ステータスバーをクリア
+    Application.StatusBar = False
     
     ' 正常終了
     Application.ScreenUpdating = True
@@ -69,9 +75,12 @@ Public Sub onClick_Exec_Button()
     Exit Sub
     
 ErrorHandler:
+    Application.StatusBar = False
     Application.ScreenUpdating = True
     MsgBox "エラーが発生しました: " & Err.Description, vbExclamation
 End Sub
+
+ 
 
 ' フォルダ選択ダイアログを表示するヘルパー関数
 Private Function select_folder() As String
